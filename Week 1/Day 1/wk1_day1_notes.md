@@ -119,3 +119,169 @@ logic of a web application! And the views are just HTML with a little bit of
 Ruby mixed in, so you already mostly know how to write views. Now, it's largely
 just a matter of learning the router and controller glue that puts them
 together.
+
+### Starting a New Rails App
+
+Let's make a new rails app -- a user-contributed white pages phonebook. Run
+`$ gem install rails`, and then `$ rails new wikipages -d postgresql -T` to
+make a new Rails app called `wikipages`. `-d postgresql` tells Rails to use
+Postgres for the database, and `-T` tells it not to install its testing tools
+-- by default, it uses a library called `test-unit`, whereas we use RSpec. To
+make this the default configuration, so you can just run `$ rails new
+your_app_name`, create a file called `.railsrc` in your home directory and type
+`-d postgresql -T`.
+
+Now, Rails will create a folder called `wikipages`. Let's take a look at it --
+some of it should look very familiar. There's a `README`, a `Rakefile`, a
+`Gemfile` and `Gemfile.lock`, and a `.gitignore`. `config.ru` is used by the
+Rails web server to start your application. As for the folders, let's go
+through those one at a time:
+
+* `app`: Your models live in the `models` folder in `app`. There are also
+  folders for controllers and views, as well as a few other things we'll touch
+  on later.
+* `bin`: We used to put the user interfaces in our `bin` folder. Now it holds a
+  link to the Rails server and a few other common commands.
+* `config`: What used to be `db/config.yml` is now `config/database.yml`. In
+  addition, there are a few other configuration files here.
+* `db`: This folder will hold your migrations and schema, just like you're used
+   to. It also holds a seeds.rb file that you can use to put default values in
+   your database.
+* `lib`: Sorry to switch this one up on you and move your models to the
+   app/models folder. The lib folder now contains a folder called tasks that you
+   can put your own Rake tasks in.
+* The `assets` folder we'll talk about later.
+* `log`: Your web server will store its logs here.
+* `public`: Static files for error messages go here.
+* `tmp`: This is where your web server's temporary files go.
+* `vendor`: Gems can be installed here in some cases (but not any cases we'll deal with).
+
+Realistically, you only need to worry about the `app`, `config`, and `db`
+folders. And 99% of your time you'll spend in the app folder. So don't feel
+overwhelmed!
+
+There are two, small, temporary configuration changes we need to make before
+starting. In `config/application.rb`, we need to add
+`config.action_controller.permit_all_parameters = true` just before the last two
+`end` keywords. And in `app/controllers/application_controller.rb`, we need to
+comment out the line that says `protect_from_forgery with exception`. We'll
+discuss these more later.
+
+To finish getting things set up, let's edit our `config/database.yml` to look
+like our previous `config.yml`s:
+
+```yaml
+development:
+  adapter: postgresql
+  database: wikipages_development
+
+test:
+  adapter: postgresql
+  database: wikipages_test
+```
+
+Now, we can create our databases just like before with `rake db:create`.
+
+We used to run `$ rake db new_migration name=create_contacts`, but that Rake
+task was specific to Standalone Migrations, since we obviously couldn't use the
+Rails generator without Rails. Let's use Rails to make a migration:
+
+```
+$ rails generate migration create_contacts
+```
+
+Or, `rails g migration create_contacts` for short.
+
+Now, let's write our migration.
+
+`db/migrate/20140326234344_create_contacts`:
+
+```ruby
+class CreateContacts < ActiveRecord:Migration
+  def change
+    create_table :contacts do|t|
+      t.column :name,  :string
+      t.column :phone, :string
+      t.column :email, :string
+
+      t.timestamps null: false
+    end
+  end
+end
+```
+
+Now we can migrate and prepare our test database just like we did before with
+`rake db:migrate`. And just like before, there's now a `schema.rb` file in `db`.
+
+Let's install RSpec and Shoulda now, as well as a few extra gems. Put these 5
+gems at the bottom of the `Gemfile` inside the last block.
+
+* `rspec-rails` to use rspec
+* `shoulda-matchers` to use in our specs
+* `better_errors` to help us debug
+* `binding_of_caller` to help with debugging as well
+* `quiet_assets` to make our logs easier to read
+
+Here's how my `Gemfile` looks (I've removed the comments, which you can read
+another time, the version numbers, the `sdoc` gem, which is only useful for
+creating documentation, and `jbuilder`, which we'll learn more about later):
+
+```
+source 'https://rubygems.org'
+
+gem 'rails'
+gem 'pg'
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
+gem 'jquery-rails'
+gem 'turbolinks'
+
+group :test, :development do
+  gem 'byebug'
+  gem 'web-console'
+  gem 'spring'
+
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'quiet_assets'
+
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
+end
+```
+
+After running bundle, let's run `$ rails generate rspec:install`. This creates
+our familiar `spec` folder and `spec_helper.rb`. One really cool feature of
+`rspec-rails` is the line in `spec_helper.rb` that says
+`config.use_transactional_fixtures = true`. This wraps each spec in an Active
+Record transaction, which is rolled back after it runs. That way, you don't
+have to delete all of the entries in your test database after each spec. Nifty,
+huh?
+
+Let's write our first test. Create a `models` folder in `spec` and add a file
+called `contact_spec.rb`:
+
+```ruby
+require 'rails_helper'
+
+describe Contact do
+  it { should validate_presence_of :name }
+end
+```
+
+Nothing new here. We can run `$ rspec` to watch it fail with the error
+`uninitialized constant Contact (NameError)`, just like before. Let's make it
+pass, by creating a `contact.rb` file in `app/models` and putting in it:
+
+```ruby
+class Contact < ActiveRecord::Base
+  validates :name, :presence => true
+end
+```
+
+Now, here's a cool new feature of Rails. If we run `$ rails console`, we'll get
+an IRB shell with our entire Rails development environment loaded. Try some
+familiar Ruby and Active Record commands like `>Contact.create(:name => 'Chuck
+Norris')`. The Rails console can be really helpful for playing around and
+testing things as you're figuring out how to build them.
