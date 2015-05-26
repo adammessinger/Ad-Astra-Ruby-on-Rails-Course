@@ -102,7 +102,10 @@ those terms mean in Rails:
 * _Controllers_ -- Puts it all together
 
 The shorthand saying for the generally-accepted Rails best practice is "fat
-models, skinny controllers." Represented visually (by Dustin Brown):
+models, skinny controllers." One alternate approach is to have skinny models and
+controllers, but keep pieces of business logic in your `lib` directory.
+
+MVC represented visually (by Dustin Brown):
 
 ![MVC visualization by Dustin Brown](http://images.learnhowtoprogram.com/mvc.jpg)
 
