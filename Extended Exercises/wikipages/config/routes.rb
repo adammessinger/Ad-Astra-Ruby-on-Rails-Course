@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root(to: 'contacts#index')
   # route                 HTTP method     controller#method
   match('contacts', {via: :get, to: 'contacts#index'})
   match('contacts', {via: :post, to: 'contacts#create'})
@@ -7,6 +8,11 @@ Rails.application.routes.draw do
   match('contacts/:id', {via: [:patch, :put], to: 'contacts#update'})
   match('contacts/:id', {via: :delete, to: 'contacts#destroy'})
   match('contacts/:id/edit', {via: :get, to: 'contacts#edit'})
+
+  # NOTE: another way to show contact list on root URL, but this must come last
+  # match('/', {via: :get, to: 'contacts#index'})
+
+###################### ORIGINAL EXPLANATORY COMMENTS ###########################
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
