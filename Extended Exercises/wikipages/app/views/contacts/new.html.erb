@@ -1,0 +1,24 @@
+<h1>New Contact</h1>
+
+<% if @contact.errors.any? %>
+  <h3>Please fix these errors:</h3>
+  <ul>
+    <!-- # NOTE: .errors is provided by ActiveModel -->
+    <% @contact.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<form action="/contacts" method="post">
+  <label for="contact_name">Name</label>
+  <input id="contact_name" name="name" type="text" value="<%= @contact.name %>">
+
+  <label for="contact_phone">Phone</label>
+  <input id="contact_phone" name="phone" type="text" value="<%= @contact.phone %>">
+
+  <label for="contact_email">Email</label>
+  <input id="contact_email" name="email" type="text" value="<%= @contact.email %>">
+
+  <button>Create Contact</button>
+</form>
