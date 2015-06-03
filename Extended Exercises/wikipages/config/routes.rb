@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   match('contacts/:id', {via: [:patch, :put], to: 'contacts#update'})
   match('contacts/:id', {via: :delete, to: 'contacts#destroy'})
   match('contacts/:id/edit', {via: :get, to: 'contacts#edit'})
+  match('contacts/:contact_id/phones', {via: :post, to: 'phones#create'})
+  match('contacts/:contact_id/phones/new', {via: :get, to: 'phones#new'})
 
   # NOTE: another way to show contact list on root URL, but this must come last
   # match('/', {via: :get, to: 'contacts#index'})
