@@ -18,9 +18,7 @@ class ContactsController < ApplicationController
   end
 
   def create
-    @contact = Contact.new(name: params[:name],
-                           email: params[:email],
-                           phone: params[:phone])
+    @contact = Contact.new(params[:contact])
 
     # NOTE: Jarret says that redirecting to the just-created record would be
     # more RESTful
@@ -40,9 +38,7 @@ class ContactsController < ApplicationController
   def update
     @contact = Contact.find(params[:id])
 
-    if @contact.update(:name => params[:name],
-                       :email => params[:email],
-                       :phone => params[:phone])
+    if @contact.update(params[:contact])
       render 'contacts/success.html.erb'
     else
       render 'contacts/edit.html.erb'
