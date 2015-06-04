@@ -281,7 +281,8 @@ and a new view at `app/views/contacts/success.html.erb`:
 ```
 
 Let's submit our form and see what happens. In the server logs, everything
-looks pretty similar to before, but look closely at the parameters:
+looks pretty similar to before, but look closely at the parameters (the JS
+dumped into the middle of things is part of a Rails security measure):
 
 ```
 {"name"=>"Michael", "phone"=>"9995551212", "email"=>"michael@epicodus.com<span>
@@ -369,8 +370,106 @@ class ContactsController < ApplicationController
 end
 ```
 
+Now, if we submit the form without including a name, we get the form back
+again, with our data intact, and a list of the errors.
+
+At this point, we're able to create, read, and list contacts. In our CRUD
+paradigm, we still are missing the ability to update and destroy them. Let's
+work on updating first.
+
+Let's start with a route that lets us edit a contact by going to a URL like
+`/contacts/1/edit`:
+
+```ruby
+Rails.application.routes.draw do
+  match('contacts', {:via => :get, :to => 'contacts#index'})
+  match('contacts', {:via => :post, :to => 'contacts#create'})
+  match('contacts/new', {:via => :get, :to => 'contacts#new'})
+  match('contacts/:id', {:via => :get, :to => 'contacts#show'})
+  match('contacts/:id/edit', {:via => :get, :to => 'contacts#edit'})
+end
+```
+
+Now, the controller method:
+
+```ruby
+class ContactsController < ApplicationController
+  def edit
+    @contact = Contact.find(params[:id])
+    render('contacts/edit.html.erb')
+  end
+end
+```
+
+And the view, `app/views/contacts/edit.html.erb`:
+
+```
+<h1>Edit contact</h1>
+
+<% if @contact.errors.any? %>
+  <h3>Please fix these errors:</h3>
+  <ul>
+    <% @contact.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<form action="/contacts/<%= @contact.id %>" method="post">
+  <input name="_method" type="hidden" value="patch">
+  <label for="contact_name">Name</label>
+  <input id="contact_name" name="name" type="text" value="<%= @contact.name %>">
+  <label for="contact_phone">Phone</label>
+  <input id="contact_phone" name="phone" type="text" value="<%= @contact.phone %>">
+  <label for="contact_email">Email</label>
+  <input id="contact_email" name="email" type="text" value="<%= @contact.email %>">
+  <button>Update Contact</button>
+</form>
+```
+
+If we go to `http://localhost:3000/contacts/1/edit`, we can see our
+pre-populated form, ready for us to update the contact.
+
+Notice this bit of code: `<input name="_method" type="hidden" value="patch">`.
+Remember how I mentioned in the lesson on how the web works that web browsers
+only support GET and POST methods? The `_method` input is Rails's way of
+communicating that, even though this form is submitted using POST, it should
+treat it as a PATCH request.
+
+Now, we need to write a route and controller action to handle the form
+submission:
+
+```ruby
+match('contacts/:id', {:via => [:patch, :put], :to => 'contacts#update'})
+```
+
+Here, we've actually mapped two HTTP methods: PATCH and PUT. PATCH is a newer
+method for updating and is less common than PUT. Rails standardizes on PATCH,
+but also encourages you to support PUT requests for backwards-compatibility.
+
+Here's the controller action:
+
+```ruby
+class ContactsController < ApplicationController
+  def update
+    @contact = Contact.find(params[:id])
+    if @contact.update(:name => params[:name],
+                       :email => params[:email],
+                       :phone => params[:phone])
+      render('contacts/success.html.erb')
+    else
+      render('contacts/edit.html.erb')
+    end
+  end
+end
+```
+
+The last thing we need to take care of is destroying a contact. Let's add a
+link for this to our show page:
+
+
+
 To-Do List:
 
 * Get Day 2 Notes from Canvas
-* Look ahead for the Rails shortcuts we're going to start using
 * Check out Heroku
