@@ -465,11 +465,232 @@ end
 ```
 
 The last thing we need to take care of is destroying a contact. Let's add a
-link for this to our show page:
+link for this to our show page, `app/views/contacts/show.html.erb`:
 
+```
+<h1><%= @contact.name %></h1>
 
+<p>Phone: <%= @contact.phone %></p>
+<p>Email: <%= @contact.email %></p>
 
-To-Do List:
+<p><a href="/contacts/<%= @contact.id %>/edit">Edit</a></p>
+<p><a href="/contacts/<%= @contact.id %>"
+      data-confirm="You sure?"
+      data-method="delete"
+      rel="nofollow">Delete</a></p>
+<p><a href="/contacts">Return to contact listing</a></p>
+```
 
-* Get Day 2 Notes from Canvas
-* Check out Heroku
+Rails has some JavaScript that loads on every page that looks for these `data-`
+attributes. If it sees `data-confirm` on a link, it will run a JavaScript
+`confirm()` before letting the request go through. If it sees `data-method` on
+a link, it will "fake" a different method than GET. Finally, `rel="nofollow"`
+tells search engines and other bots that might be crawling your page not to
+click the link - we don't want them going around deleting all of our data!
+
+To wrap this up, let's write a route, controller action, and view to handle
+this link:
+
+`config/routes.rb`
+
+```ruby
+Rails.application.routes.draw do
+  match('contacts/:id', {:via => :delete, :to => 'contacts#destroy'})
+end
+```
+
+`app/controllers/contacts_controller.rb`
+
+```ruby
+class ContactsController < ApplicationController
+  def destroy
+    @contact = Contact.find(params[:id])
+    @contact.destroy
+    render('contacts/destroy.html.erb')
+  end
+end
+```
+
+`app/views/contacts/destroy.html.erb`
+
+```
+<h1>Contact deleted</h1>
+
+<p>
+  Would you like to <a href="/contacts">see all the contacts</a>, or
+  <a href="/contacts/new">create a new one</a>?
+</p>
+```
+
+To wrap up the basics of our app, let's write one more route for the homepage:
+
+`config/routes.rb`
+
+```ruby
+Rails.application.routes.draw do
+  match('/', {:via => :get, :to => 'contacts#index'})
+end
+```
+
+Remember how I told you that you should more or less stick to the CRUD pattern
+for your database-backed objects -- that if you need to do something to an
+object that isn't a CRUD operation, you probably should be using another object
+to model it, and most models should have the CRUD functionality available?
+
+The four HTTP methods we're using -- POST, GET, PATCH, and DELETE -- map to the
+CRUD paradigm: Create is POST, Read is GET, Update is PATCH, and Destroy is
+DELETE. The fifth part of CRUD, List, maps to the GET index action. And then we
+have the GET new and GET edit actions, which are basically tools to let the
+user make a POST or PATCH request. These 7 actions are what we call **RESTful
+actions**. **REST** stands for _REpresentational State Transfer,_ and it's an
+approach to designing web services based around HTTP methods.
+
+For now, a good rule of thumb is that for every model in your app, you should
+have the seven RESTful routes and controller actions. You can get away with
+having less of them sometime: for example, you could get rid of your new page,
+and simply put a form for creating a new contact on your `index` page:
+
+`app/views/contacts/index.html.erb`
+
+```
+<h1>Contacts</h1>
+
+<ul>
+  <% @contacts.each do |contact| %>
+    <li><a href="/contacts/<%= contact.id %>"><%= contact.name %></a></li>
+  <% end %>
+</ul>
+
+<h2>New contact</h2>
+
+<% if @contact.errors.any? %>
+  <h3>Please fix these errors:</h3>
+  <ul>
+    <% @contact.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<form action="/contacts" method="post">
+  <label for="contact_name">Name</label>
+  <input id="contact_name" name="name" type="text" value="<%= @contact.name %>">
+  <label for="contact_phone">Phone</label>
+  <input id="contact_phone" name="phone" type="text" value="<%= @contact.phone %>">
+  <label for="contact_email">Email</label>
+  <input id="contact_email" name="email" type="text" value="<%= @contact.email %>">
+  <button>Create Contact</button>
+</form>
+```
+
+But you should almost never create an action that isn't one of the seven
+RESTful actions. If you think you need to, it almost always means you need to
+create a new model for that functionality. You can think of REST as
+object-oriented design for the web.
+
+## Better Parameters
+
+For the sake of clarity, I was a bit overly-verbose in how I wrote part of our controller actions. Check out this code:
+
+```ruby
+@contact=Contact.new(:name => params[:name],
+                     :phone => params[:phone],
+                     :email => params[:email])
+```
+
+The key in the hash passed to `Contact.new` is the same as the key in the
+params hash. For example, `:name => params[:name]`. We can rewrite that as
+simply:
+
+```ruby
+@contact=Contact.new(params)
+```
+
+The only problem with this is that sometimes other stuff gets included in the
+params that has nothing to do with the contact (such as `:method => :patch`
+when we're faking a PATCH request), and we don't want to pass that into
+`Contact.new`. The common Rails solution is to nest our params. We want them to
+come in looking like this:
+
+```ruby
+{:contact => { :name =>'Eleanor',
+               :phone =>'1-800-WHITE-HOUSE',
+               :email =>'eleanor@rooselvelt.com' } }
+```
+
+And then to access the hash in the controller like this:
+
+```ruby
+@contact=Contact.new(params[:contact])
+```
+
+To make the params come in that way, we need to change our forms from this:
+
+```
+<form action="/contacts/<%=@contact.id %>" method="post">
+  <input name="_method" type="hidden" value="patch">
+  <label for="contact_name">Name</label>
+  <input id="contact_name" name="name" type="text" value="<%=@contact.name %>">
+  <label for="contact_phone">Phone</label>
+  <input id="contact_phone" name="phone" type="text" value="<%=@contact.phone %>">
+  <label for="contact_email">Email</label>
+  <input id="contact_email" name="email" type="text" value="<%=@contact.email %>">
+  <button>Update contact</button>
+</form>
+```
+
+to this (note the `name` attributes):
+
+```
+<form action="/contacts/<%=@contact.id %>" method="post">
+  <input name="_method" type="hidden" value="patch">
+  <label for="contact_name">Name</label>
+  <input id="contact_name" name="contact[name]" type="text" value="<%=@contact.name %>">
+  <label for="contact_phone">Phone</label>
+  <input id="contact_phone" name="contact[phone]" type="text" value="<%=@contact.phone %>">
+  <label for="contact_email">Email</label>
+  <input id="contact_email" name="contact[email]" type="text" value="<%=@contact.email %>">
+  <button>Update contact</button>
+</form>
+```
+
+Rails will parse forms submitted with these names into a hash just like what we
+want.
+
+Going forward, you should write all of your forms and controllers this way.
+
+## Heroku
+
+Watch [this screencast on Heroku](http://www.codeschool.com/code_tv/heroku), a
+platform that lets you put your Rails sites online. The video is from
+[Code School](http://www.codeschool.com/), which offers a lot of mini-courses
+on web and mobile development. Don't worry if you don't understand some of the
+things the video uses for creating its Rails app, especially scaffolding: we'll
+learn more later. Just focus on the Heroku part!
+
+As you go through the video, keep in mind that some of their suggestions don't
+apply to the way we've set things up. For example, we're using the
+[rubygems-bundler](https://github.com/mpapis/rubygems-bundler) gem instead of
+`bundle exec`, and we have installed Postgres through homebrew. Also, the video
+shows how to install the Heroku toolbelt with the graphical installer, but on a
+Mac, you can just run `brew install heroku-toolbelt` (that's how the computers
+at Epicodus are set up).
+
+This video shows how to deploy with a Rails 3 app. The only change for Rails 4
+is that you need to include the `rails_12factor` gem for your app to work on
+Heroku. The `rails_12factor` gem is only needed in production, so you can put
+it in your `Gemfile` like this:
+
+```ruby
+group :production do
+  gem 'rails_12factor'
+end
+```
+
+Then run `$ bundle install --without production`. This will configure Bundler
+not to install the 12factor gem locally. (Bundler will remember that setting
+for your project, so you can just run `$ bundle` after that time.)
+
+When you're working in pairs on a project, it's best to not create a separate
+app for each of you. Instead, one of you can make the app on Heroku, and then
+on the Heroku website, share it with the other pair.
