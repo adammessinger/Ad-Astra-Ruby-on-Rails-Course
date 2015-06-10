@@ -1,3 +1,5 @@
+<% content_for(:title, "Wikipages: Add Phone for #{@phone.contact.name}") %>
+
 <h1>New phone number for <%= @phone.contact.name %></h1>
 
 <% if @phone.errors.any? %>

@@ -25,7 +25,8 @@ class ContactsController < ApplicationController
     # NOTE: Calling render doesn't leave this method, so all vars available to
     # this method are available to the rendered view.
     if @contact.save
-      render 'contacts/success.html.erb'
+      flash[:notice] = 'Huzzah! Contact created.'
+      redirect_to "/contacts/#{@contact.id}"
     else
       render 'contacts/new.html.erb'
     end
@@ -39,7 +40,8 @@ class ContactsController < ApplicationController
     @contact = Contact.find(params[:id])
 
     if @contact.update(params[:contact])
-      render 'contacts/success.html.erb'
+      flash[:notice] = 'Boo yah! Contact created.'
+      redirect_to "/contacts/#{@contact.id}"
     else
       render 'contacts/edit.html.erb'
     end

@@ -1,18 +1,24 @@
 class PhonesController < ApplicationController
+  before_action :load_contact
+
   def new
-    contact = Contact.find(params[:contact_id])
-    @phone = contact.phones.new
+    @phone = @contact.phones.new
     # render('phones/new.html.erb')
   end
 
   def create
-    @phone = Phone.new(:number => params[:number],
-                       :contact_id => params[:contact_id])
+    @phone = @contact.phones.create(number: params[:number])
     if @phone.save
-      # render('phones/success.html.erb')
-      redirect_to("contacts/#{params[:contact_id]}")
+      redirect_to("/contacts/#{params[:contact_id]}")
+      # NOTE: the following requires the magical auto-routing Jarrett prefers
+      # redirect_to @contact
     else
       render('phones/new.html.erb')
     end
+  end
+
+private
+  def load_contact
+    @contact = Contact.find(params[:contact_id])
   end
 end
