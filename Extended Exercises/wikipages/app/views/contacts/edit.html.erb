@@ -2,22 +2,12 @@
 
 <h1>Edit contact</h1>
 
-<% if @contact.errors.any? %>
-  <h3>Please fix these errors:</h3>
-  <ul>
-    <% @contact.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
-    <% end %>
-  </ul>
-<% end %>
+<%= render('contact_errors') %>
 
 <form action="/contacts/<%= @contact.id %>" method="post">
   <input name="_method" type="hidden" value="patch">
-  <label for="contact_name">Name</label>
-  <input id="contact_name" name="contact[name]" type="text" value="<%= @contact.name %>">
-  <label for="contact_phone">Phone</label>
-  <input id="contact_phone" name="contact[phone]" type="text" value="<%= @contact.phone %>">
-  <label for="contact_email">Email</label>
-  <input id="contact_email" name="contact[email]" type="text" value="<%= @contact.email %>">
+
+  <%= render('contact_form') %>
+
   <button>Update Contact</button>
 </form>
