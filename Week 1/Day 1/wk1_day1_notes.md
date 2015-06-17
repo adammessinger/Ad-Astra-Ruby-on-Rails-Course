@@ -229,7 +229,7 @@ Here's how my `Gemfile` looks (I've removed the comments, which you can read
 another time, the version numbers, the `sdoc` gem, which is only useful for
 creating documentation, and `jbuilder`, which we'll learn more about later):
 
-```
+```ruby
 source 'https://rubygems.org'
 
 gem 'rails'

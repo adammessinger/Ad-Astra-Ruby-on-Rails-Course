@@ -61,7 +61,7 @@ routes. Let's start by updating our `contacts/show.html.erb` view:
 
 `app/views/contacts/show.html.erb`
 
-```
+```html
 <h1><%= @contact.name %></h1>
 
 <a href="/contacts/<%= @contact.id %>/phones/new">Add phone</a>
@@ -94,7 +94,7 @@ And a view:
 
 `app/views/phones/new.html.erb`
 
-```
+```html
 <h1>New phone number for <%= @phone.contact.name %></h1>
 
 <% if @phone.errors.any? %>
@@ -145,7 +145,7 @@ Here's an update to `show.html.erb` to allow editing and deleting phones:
 
 `app/views/contacts/show.html.erb`
 
-```
+```html
 <h1><%= @contact.name %></h1>
 
 <p>Phones:</p>

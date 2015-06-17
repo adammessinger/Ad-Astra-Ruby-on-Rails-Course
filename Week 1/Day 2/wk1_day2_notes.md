@@ -63,7 +63,7 @@ you won't use them like any other Ruby classes.
 The last step is to create a folder in `app/views` called `contacts`, and in it
 a file called `index.html.erb`. In that, we'll put:
 
-```
+```html
 <h1>Contacts</h1>
 
 <ul>
@@ -143,7 +143,7 @@ want to show.
 Phew! Now, let's make a view -- `app/views/contacts/show.html.erb` -- for this
 controller action:
 
-```
+```html
 <h1><%= @contact.name %></h1>
 
 <p>Phone: <%= @contact.phone %></p>
@@ -178,7 +178,7 @@ To review:
 Now, let's make our index page link to our contact show pages, and the show
 page link back to the index. Here's my updated index view:
 
-```
+```html
 <h1>Contacts</h1>
 
 <ul>
@@ -190,7 +190,7 @@ page link back to the index. Here's my updated index view:
 
 And the updated show view:
 
-```
+```html
 <h1><%= @contact.name %></h1>
 
 <p>Phone: <%= @contact.phone %></p>
@@ -227,7 +227,7 @@ end
 
 And the view:
 
-```
+```html
 <h1>New contact</h1>
 
 <form action="/contacts" method="post">
@@ -270,7 +270,7 @@ end
 
 and a new view at `app/views/contacts/success.html.erb`:
 
-```ruby
+```html
 <h1>Contact saved!</h1>
 
 <p>Your contact was successfully saved.</p>
@@ -313,7 +313,7 @@ now, we show the success page regardless. Let's change this so that the user is
 shown the form again and the errors are listed out. Here's the updated view,
 `app/views/contacts/new.html.erb`:
 
-```
+```html
 <h1>New contact</h1>
 
 <% if @contact.errors.any? %>
@@ -403,7 +403,7 @@ end
 
 And the view, `app/views/contacts/edit.html.erb`:
 
-```
+```html
 <h1>Edit contact</h1>
 
 <% if @contact.errors.any? %>
@@ -467,7 +467,7 @@ end
 The last thing we need to take care of is destroying a contact. Let's add a
 link for this to our show page, `app/views/contacts/show.html.erb`:
 
-```
+```html
 <h1><%= @contact.name %></h1>
 
 <p>Phone: <%= @contact.phone %></p>
@@ -513,7 +513,7 @@ end
 
 `app/views/contacts/destroy.html.erb`
 
-```
+```html
 <h1>Contact deleted</h1>
 
 <p>
@@ -552,7 +552,7 @@ and simply put a form for creating a new contact on your `index` page:
 
 `app/views/contacts/index.html.erb`
 
-```
+```html
 <h1>Contacts</h1>
 
 <ul>
@@ -626,7 +626,7 @@ And then to access the hash in the controller like this:
 
 To make the params come in that way, we need to change our forms from this:
 
-```
+```html
 <form action="/contacts/<%=@contact.id %>" method="post">
   <input name="_method" type="hidden" value="patch">
   <label for="contact_name">Name</label>
@@ -641,7 +641,7 @@ To make the params come in that way, we need to change our forms from this:
 
 to this (note the `name` attributes):
 
-```
+```html
 <form action="/contacts/<%=@contact.id %>" method="post">
   <input name="_method" type="hidden" value="patch">
   <label for="contact_name">Name</label>
