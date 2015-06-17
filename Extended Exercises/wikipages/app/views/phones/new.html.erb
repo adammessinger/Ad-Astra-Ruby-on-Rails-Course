@@ -4,7 +4,7 @@
 
 <%= render('layouts/errors', object: @phone) %>
 
-<%= form_for(@phone) do |f| %>
+<%= form_for([:contact, @phone]) do |f| %>
   <div class="form-group">
     <%= f.label :number %>
     <%= f.telephone_field :number %>

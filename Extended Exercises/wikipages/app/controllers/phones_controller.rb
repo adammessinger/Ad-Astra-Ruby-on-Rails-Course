@@ -6,11 +6,10 @@ class PhonesController < ApplicationController
   end
 
   def create
-    @phone = @contact.phones.create(number: params[:number])
+    @phone = @contact.phones.create(params[:phone])
     if @phone.save
       redirect_to @contact
     else
-      # render('phones/new.html.erb')
       render('new')
     end
   end
