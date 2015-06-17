@@ -2,10 +2,4 @@
 
 <h1>New Contact</h1>
 
-<%= render('layouts/errors', object: @contact) %>
-
-<form action="/contacts" method="post">
-  <%= render('contact_form') %>
-
-  <button>Create Contact</button>
-</form>
+<%= render('contact_form') %>

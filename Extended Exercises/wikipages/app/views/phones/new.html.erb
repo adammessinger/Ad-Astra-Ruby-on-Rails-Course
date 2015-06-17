@@ -4,8 +4,10 @@
 
 <%= render('layouts/errors', object: @phone) %>
 
-<form action="/contacts/<%= @phone.contact.id %>/phones" method="post">
-  <label for="phone_number">Number</label>
-  <input id="phone_number" name="number" type="text" value="<%= @phone.number %>">
-  <button>Add phone</button>
-</form>
+<%= form_for(@phone) do |f| %>
+  <div class="form-group">
+    <%= f.label :number %>
+    <%= f.telephone_field :number %>
+  </div>
+  <%= f.submit(class: 'btn btn-primary') %>
+<% end %>

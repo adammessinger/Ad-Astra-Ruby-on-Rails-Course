@@ -1,8 +1,17 @@
-<label for="contact_name">Name</label>
-<input id="contact_name" name="contact[name]" type="text" value="<%= @contact.name %>">
+<%= render("layouts/errors", :object => @contact) %>
 
-<label for="contact_phone">Phone</label>
-<input id="contact_phone" name="contact[phone]" type="text" value="<%= @contact.phone %>">
-
-<label for="contact_email">Email</label>
-<input id="contact_email" name="contact[email]" type="text" value="<%= @contact.email %>">
+<%= form_for(@contact) do |f| %>
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="form-group">
+    <%= f.label :phone %>
+    <%= f.text_field :phone %>
+  </div>
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </div>
+  <%= f.submit(class: 'btn btn-primary') %>
+<% end %>

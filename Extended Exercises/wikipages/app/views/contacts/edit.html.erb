@@ -2,12 +2,4 @@
 
 <h1>Edit contact</h1>
 
-<%= render('layouts/errors', object: @contact) %>
-
-<form action="/contacts/<%= @contact.id %>" method="post">
-  <input name="_method" type="hidden" value="patch">
-
-  <%= render('contact_form') %>
-
-  <button>Update Contact</button>
-</form>
+<%= render('contact_form') %>
