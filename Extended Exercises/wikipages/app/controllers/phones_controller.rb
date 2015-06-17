@@ -3,17 +3,15 @@ class PhonesController < ApplicationController
 
   def new
     @phone = @contact.phones.new
-    # render('phones/new.html.erb')
   end
 
   def create
     @phone = @contact.phones.create(number: params[:number])
     if @phone.save
-      redirect_to("/contacts/#{params[:contact_id]}")
-      # NOTE: the following requires the magical auto-routing Jarrett prefers
-      # redirect_to @contact
+      redirect_to @contact
     else
-      render('phones/new.html.erb')
+      # render('phones/new.html.erb')
+      render('new')
     end
   end
 
