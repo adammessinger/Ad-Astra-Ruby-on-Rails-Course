@@ -16,7 +16,8 @@
   <% @contact.phones.each do |phone| %>
     <li>
       <%= phone.number %> |
-      <a href="/contacts/<%= @contact.id %>/phones/<%= phone.id %>/edit">Edit</a> |
+      <%= link_to('Edit', edit_contact_phone_path(@contact, phone)) %> |
+      <%= link_to('Delete', ) %>
       <a href="/contacts/<%= @contact.id %>/phones/<%= phone.id %>"
          data-confirm="You sure?"
          data-method="delete"
@@ -26,18 +27,19 @@
 </ul>
 
 <p>
-  <a href="/contacts/<%= @contact.id %>/phones/new">Add phone</a>
+  <%= link_to('Add phone', new_contact_phone_path(@contact)) %>
 </p>
 
 <p>
-  <a href="/contacts/<%= @contact.id %>/edit">Edit</a>
+  <%= link_to('Edit', edit_contact_path(@contact), class: 'btn') %>
 </p>
 
 <p>
-  <a href="/contacts/<%= @contact.id %>"
-     data-confirm="You sure?"
-     data-method="delete"
-     rel="nofollow">Delete</a>
+  <%= link_to('Delete', @contact, {
+    data: { confirm: 'You sure?', method: 'delete' },
+    class: 'btn btn-danger',
+    rel: 'nofollow'
+  }) %>
 </p>
 
 <p>

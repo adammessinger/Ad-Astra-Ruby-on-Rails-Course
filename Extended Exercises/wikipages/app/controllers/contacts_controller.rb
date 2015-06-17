@@ -1,11 +1,6 @@
 class ContactsController < ApplicationController
   def index
-    # get data from model
     @contacts = Contact.all
-    # render view
-    # NOTE: We could leave next line out. By convention, Rails will automatically
-    # look for a view at [class name]/[method name].html.erb
-    render 'contacts/index.html.erb'
   end
 
   def show
@@ -26,9 +21,9 @@ class ContactsController < ApplicationController
     # this method are available to the rendered view.
     if @contact.save
       flash[:notice] = 'Huzzah! Contact created.'
-      redirect_to "/contacts/#{@contact.id}"
+      redirect_to @contact
     else
-      render 'contacts/new.html.erb'
+      render 'new'
     end
   end
 
@@ -41,9 +36,9 @@ class ContactsController < ApplicationController
 
     if @contact.update(params[:contact])
       flash[:notice] = 'Boo yah! Contact created.'
-      redirect_to "/contacts/#{@contact.id}"
+      redirect_to @contact
     else
-      render 'contacts/edit.html.erb'
+      render 'edit'
     end
   end
 

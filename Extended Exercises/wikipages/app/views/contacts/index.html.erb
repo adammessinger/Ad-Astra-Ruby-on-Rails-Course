@@ -3,15 +3,13 @@
 <h1>Contacts</h1>
 
 <p>
-  <a href="/contacts/new">Create new contact</a>
+  <%= link_to('Create new contact', new_contact_path, class: 'btn btn-primary') %>
 </p>
 
 <ul>
   <% @contacts.each do |contact| %>
     <li>
-      <a href="/contacts/<%= contact.id %>">
-        <%= contact.name %>
-      </a>
+      <%= link_to(contact.name, contact) %>
     </li>
   <% end %>
 </ul>

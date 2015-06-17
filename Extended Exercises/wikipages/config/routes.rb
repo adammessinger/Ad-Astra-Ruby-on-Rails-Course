@@ -1,15 +1,20 @@
 Rails.application.routes.draw do
+  resources :contacts do
+    resources :phones
+  end
+
   root(to: 'contacts#index')
+
   # route                 HTTP method     controller#method
-  match('contacts', {via: :get, to: 'contacts#index'})
-  match('contacts', {via: :post, to: 'contacts#create'})
-  match('contacts/new', {via: :get, to: 'contacts#new'})
-  match('contacts/:id', {via: :get, to: 'contacts#show'})
-  match('contacts/:id', {via: [:patch, :put], to: 'contacts#update'})
-  match('contacts/:id', {via: :delete, to: 'contacts#destroy'})
-  match('contacts/:id/edit', {via: :get, to: 'contacts#edit'})
-  match('contacts/:contact_id/phones', {via: :post, to: 'phones#create'})
-  match('contacts/:contact_id/phones/new', {via: :get, to: 'phones#new'})
+  # match('contacts', {via: :get, to: 'contacts#index'})
+  # match('contacts', {via: :post, to: 'contacts#create'})
+  # match('contacts/new', {via: :get, to: 'contacts#new'})
+  # match('contacts/:id', {via: :get, to: 'contacts#show'})
+  # match('contacts/:id', {via: [:patch, :put], to: 'contacts#update'})
+  # match('contacts/:id', {via: :delete, to: 'contacts#destroy'})
+  # match('contacts/:id/edit', {via: :get, to: 'contacts#edit'})
+  # match('contacts/:contact_id/phones', {via: :post, to: 'phones#create'})
+  # match('contacts/:contact_id/phones/new', {via: :get, to: 'phones#new'})
 
   # NOTE: another way to show contact list on root URL, but this must come last
   # match('/', {via: :get, to: 'contacts#index'})
