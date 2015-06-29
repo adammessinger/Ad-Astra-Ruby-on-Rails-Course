@@ -7,16 +7,23 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<% if user_signed_in? %>
+  <p>
+    Logged in as <strong><%= current_user.email %></strong>.
+    <%= link_to 'Edit profile', edit_user_registration_path, :class => '' %> |
+    <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => ''  %>
+  </p>
+<% end %>
 
-  <% flash.each do |type, content| %>
-    <% if content.respond_to?('each')
-      content.each do |item| %>
-        <%= render 'layouts/notification', type: type, content: item %>
-      <% end %>
-    <% else %>
-      <%= render 'layouts/notification', type: type, content: content %>
+<% flash.each do |type, content| %>
+  <% if content.respond_to?('each')
+    content.each do |item| %>
+      <%= render 'layouts/notification', type: type, content: item %>
     <% end %>
+  <% else %>
+    <%= render 'layouts/notification', type: type, content: content %>
   <% end %>
+<% end %>
 
   <%= yield %>
 
