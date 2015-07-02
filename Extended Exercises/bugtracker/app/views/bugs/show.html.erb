@@ -10,7 +10,7 @@
 
 <p>
   <strong>Assignee:</strong>
-  <%= @bug.assignee.email %>
+  <%= @bug.assignee ? @bug.assignee.email : 'Unassigned' %>
 </p>
 
 <p>
