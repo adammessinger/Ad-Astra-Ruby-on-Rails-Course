@@ -4,6 +4,7 @@ describe Bug do
   it { should belong_to(:reporter) }
   it { should belong_to(:assignee) }
   it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:reporter_id) }
   it { should validate_presence_of(:description) }
 
   it 'validates associated reporter' do

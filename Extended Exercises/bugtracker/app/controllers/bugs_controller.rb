@@ -69,6 +69,6 @@ class BugsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def bug_params
-      params.require(:bug).permit(:title, :description, :tags, :closed)
+      params.require(:bug).permit(:reporter_id, :assignee_id, :title, :description, :tags, :closed)
     end
 end

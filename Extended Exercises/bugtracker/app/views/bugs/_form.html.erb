@@ -16,6 +16,14 @@
     <%= f.text_field :title %>
   </div>
   <div class="field">
+    <%= f.label :reporter_id %><br>
+    <%= f.collection_select :reporter_id, User.all, :id, :email, prompt: false %>
+  </div>
+  <div class="field">
+    <%= f.label :assignee_id %><br>
+    <%= f.collection_select :assignee_id, User.all, :id, :email, prompt: 'Choose...' %>
+  </div>
+  <div class="field">
     <%= f.label :description %><br>
     <%= f.text_area :description %>
   </div>
