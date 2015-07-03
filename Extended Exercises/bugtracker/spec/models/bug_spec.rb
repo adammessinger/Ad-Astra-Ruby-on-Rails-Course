@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Bug do
   it { should belong_to(:reporter) }
   it { should belong_to(:assignee) }
+  it { should have_many(:comments) }
   it { should validate_presence_of(:title) }
   it { should validate_presence_of(:reporter_id) }
   it { should validate_presence_of(:description) }
