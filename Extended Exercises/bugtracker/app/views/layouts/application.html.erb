@@ -5,14 +5,16 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+  <div class="container">
 <% if user_signed_in? %>
-  <p>
-    Logged in as <strong><%= current_user.email %></strong>.
-    <%= link_to 'Edit profile', edit_user_registration_path, :class => '' %> |
-    <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => ''  %>
-  </p>
+    <p>
+      Logged in as <strong><%= current_user.email %></strong>.
+      <%= link_to 'Edit profile', edit_user_registration_path, :class => '' %> |
+      <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => ''  %>
+    </p>
 <% end %>
 
 <% flash.each do |type, content| %>
@@ -25,7 +27,7 @@
   <% end %>
 <% end %>
 
-  <%= yield %>
-
+    <%= yield %>
+  </div>
 </body>
 </html>
