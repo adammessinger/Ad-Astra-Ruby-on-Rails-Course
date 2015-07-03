@@ -18,8 +18,12 @@
       <% @bugs.each do |bug| %>
         <tr>
           <td><%= bug.id %></td>
-          <td><%= link_to bug.title, bug %></td>
-          <td class="<%= bug.assignee ? '' : 'bg-warning' %>">
+          <td>
+            <%= bug.closed ? raw('<del>') : '' %>
+            <%= link_to bug.title, bug %>
+            <%= bug.closed ? raw('</del>') : '' %>
+          </td>
+          <td class="<%= bug.assignee ? '' : 'bg-warning text-warning' %>">
             <%= bug.assignee ? bug.assignee.email : 'unassigned' %>
           </td>
           <td><%= bug.tags %></td>
