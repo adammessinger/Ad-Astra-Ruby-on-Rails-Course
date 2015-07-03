@@ -1,32 +1,33 @@
-<p>
-  <strong>Title:</strong>
-  <%= @bug.title %>
-</p>
+<h1>
+  #<%= @bug.id.to_s + ': ' + @bug.title %>
+</h1>
+
+<dl class="dl-horizontal">
+  <dt>Reporter:</dt>
+  <dd><%= @bug.reporter.email %></dd>
+
+  <dt>Assignee:</dt>
+  <dd>
+    <span class="<%= @bug.assignee ? '' : 'bg-warning text-warning' %>">
+      <%= @bug.assignee ? @bug.assignee.email : 'unassigned' %>
+    </span>
+  </dd>
+
+  <dt>Description:</dt>
+  <dd><%= @bug.description %></dd>
+
+  <dt>Tags:</dt>
+  <dd><%= @bug.tags %></dd>
+
+  <dt>Closed:</dt>
+  <dd>
+    <span class="<%= @bug.closed ? 'bg-success' : 'bg-danger' %>">
+      <%= @bug.closed %>
+    </span>
+  </dd>
+</dl>
 
 <p>
-  <strong>Reporter:</strong>
-  <%= @bug.reporter.email %>
+  <%= link_to 'Edit', edit_bug_path(@bug), class: 'btn btn-default' %>
+  &nbsp;&nbsp;<%= link_to 'Back', bugs_path %>
 </p>
-
-<p>
-  <strong>Assignee:</strong>
-  <%= @bug.assignee ? @bug.assignee.email : 'Unassigned' %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @bug.description %>
-</p>
-
-<p>
-  <strong>Tags:</strong>
-  <%= @bug.tags %>
-</p>
-
-<p>
-  <strong>Closed:</strong>
-  <%= @bug.closed %>
-</p>
-
-<%= link_to 'Edit', edit_bug_path(@bug) %> |
-<%= link_to 'Back', bugs_path %>
