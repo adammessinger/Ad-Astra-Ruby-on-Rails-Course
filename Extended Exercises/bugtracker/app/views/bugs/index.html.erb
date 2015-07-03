@@ -1,4 +1,8 @@
-<h1>Listing Bugs</h1>
+<div class="clearfix">
+  <h1 class="pull-left">All Bugs</h1>
+
+  <p class="pull-right"><%= link_to 'New Bug', new_bug_path, class: 'btn btn-success' %></p>
+</div>
 
 <div class="table-responsive">
   <table class="table">
@@ -45,4 +49,4 @@
   </table>
 </div>
 
-<%= link_to 'New Bug', new_bug_path, class: 'btn btn-success' %>
+<p><%= link_to 'New Bug', new_bug_path, class: 'btn btn-success' %></p>
