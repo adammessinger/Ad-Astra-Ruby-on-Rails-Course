@@ -9,6 +9,7 @@
         <th>Assignee</th>
         <th>Tags</th>
         <th>Closed</th>
+        <th>Opened</th>
         <th>Updated</th>
         <th colspan="2"></th>
       </tr>
@@ -30,7 +31,12 @@
           <td class="<%= bug.closed ? 'bg-success' : 'bg-danger' %>">
             <%= bug.closed %>
           </td>
-          <td><%= bug.updated_at %></td>
+          <td class="text-nowrap">
+            <%= bug.created_at.to_time.strftime('%Y-%m-%d') %>
+          </td>
+          <td class="text-nowrap">
+            <%= bug.updated_at.to_time.strftime('%Y-%m-%d') %>
+          </td>
           <td><%= link_to 'Edit', edit_bug_path(bug), class: 'btn btn-xs btn-default' %></td>
           <td><%= link_to 'Delete', bug, method: :delete, class: 'btn btn-xs btn-danger', data: { confirm: 'Are you sure?' } %></td>
         </tr>
