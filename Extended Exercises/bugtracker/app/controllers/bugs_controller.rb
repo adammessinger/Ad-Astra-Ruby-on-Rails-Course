@@ -19,6 +19,9 @@ class BugsController < ApplicationController
 
   # GET /bugs/1/edit
   def edit
+    if @bug.reporter == nil
+      @bug.reporter = current_user
+    end
   end
 
   # POST /bugs

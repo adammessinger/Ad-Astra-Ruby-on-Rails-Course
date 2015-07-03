@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
-  has_many :reports, class_name: 'Bug', foreign_key: 'reporter_id'
-  has_many :assignments, class_name: 'Bug', foreign_key: 'assignee_id'
+  has_many :reports, class_name: :Bug, foreign_key: :reporter_id, dependent: :nullify
+  has_many :assignments, class_name: :Bug, foreign_key: :assignee_id, dependent: :nullify
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

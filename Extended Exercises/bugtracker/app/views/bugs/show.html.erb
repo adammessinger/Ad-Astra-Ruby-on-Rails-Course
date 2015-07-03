@@ -4,7 +4,11 @@
 
 <dl class="dl-horizontal">
   <dt>Reporter:</dt>
-  <dd><%= @bug.reporter.email %></dd>
+  <dd>
+    <span class="<%= @bug.reporter ? '' : 'bg-warning text-warning' %>">
+      <%= @bug.reporter ? @bug.reporter.email : 'unassigned' %>
+    </span>
+  </dd>
 
   <dt>Assignee:</dt>
   <dd>
