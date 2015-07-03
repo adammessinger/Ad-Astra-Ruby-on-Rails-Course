@@ -14,7 +14,7 @@ class BugsController < ApplicationController
 
   # GET /bugs/new
   def new
-    @bug = Bug.new
+    @bug = Bug.new(reporter_id: current_user.id)
   end
 
   # GET /bugs/1/edit
