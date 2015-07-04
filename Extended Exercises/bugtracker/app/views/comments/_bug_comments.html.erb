@@ -1,0 +1,41 @@
+<h2>Comments</h2>
+
+<% if @bug.comments.count == 0 %>
+
+<p>
+  No comments found.
+</p>
+
+<% else %>
+
+  <% @bug.comments.each do |comment| %>
+
+  <h3>#<%= comment.id %> by <%= comment.author.email %></h3>
+
+  <div>
+    <p>
+      <%= comment.body %>
+    </p>
+
+    <aside class="text-muted">
+      <p><small>
+        Created <%= comment.created_at %>
+    <% if comment.created_at != comment.updated_at %>
+        <br>Edited <%= comment.updated_at %>
+    <% end %>
+      </small></p>
+    </aside>
+
+    <p>
+      <%= link_to 'Edit', edit_bug_comment_path(@bug, comment), class: 'btn btn-xs btn-default' %>
+      <%= link_to 'Delete', bug_comment_path(@bug, comment), method: :delete, class: 'btn btn-xs btn-danger', data: { confirm: 'Are you sure?' } %>
+    </p>
+  </div>
+
+  <% end %>
+
+<% end %>
+
+<p>
+  <%= link_to 'Add a Comment', new_bug_comment_path(@bug), class: 'btn btn-success' %>
+</p>
